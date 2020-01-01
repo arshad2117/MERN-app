@@ -5,7 +5,7 @@ const User = require("../models/User");
 const verifyToken = (req, res, next) => {
   const bearerHeader = req.headers["authorization"];
   const token = bearerHeader.split(" ")[1];
-  if (!token) res.status(403);
+  if (!token) res.status(403).json({ msg: "Unauthorized" });
   try {
     const verified = jwt.verify(token, keys.jwtSecret);
     User.findById(verified.id).then(user => {
@@ -17,7 +17,7 @@ const verifyToken = (req, res, next) => {
       }
     });
   } catch (err) {
-    res.status(403);
+    return res.status(403).json({ msg: "Unauthorized" });
   }
 };
 
